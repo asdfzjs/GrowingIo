@@ -35,46 +35,7 @@ public class GrowingDownloadApi extends DownloadApi {
      */
     public void store(String[] links,String date) throws IOException {
     	
-    	for (int i = 0; i < links.length; i++) {
-            String[] linkParts = splitLink(links[i]);
-            String filename = linkParts[2];
-            if (uncompress) {
-                filename = filename.substring(0, 10);
-            }
-
-            String storePath = baseStorePath + File.separator +
-                    linkParts[0] + File.separator + date;
-            File dir = new File(storePath);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            BufferedOutputStream bout = null;
-            BufferedInputStream bin = null;
-            try {
-                bout = new BufferedOutputStream(new FileOutputStream(storePath + File.separator + filename));
-
-                HttpResponse response = get(links[i], null, null, Charset.forName("utf-8"));
-                InputStream in = response.getEntity().getContent();
-                if (uncompress) {
-                    in = new GZIPInputStream(in);
-                }
-                bin = new BufferedInputStream(in);
-                byte[] chunk = new byte[4096];
-                int size = -1;
-                while ((size = bin.read(chunk)) > -1) {
-                    bout.write(chunk, 0, size);
-                    bout.flush();
-                }
-                bout.close();
-                bin.close();
-            } catch (IOException e) {
-                logger.error("Failed to store the download file: " + links[i]);
-            }
-            logger.info("Successfully download the file: " + storePath + File.separator + filename);
-        }
-    	
-//        for (int i = 0; i < links.length; i++) {
+//    	for (int i = 0; i < links.length; i++) {
 //            String[] linkParts = splitLink(links[i]);
 //            String filename = linkParts[2];
 //            if (uncompress) {
@@ -90,39 +51,78 @@ public class GrowingDownloadApi extends DownloadApi {
 //
 //            BufferedOutputStream bout = null;
 //            BufferedInputStream bin = null;
-//            bout = new BufferedOutputStream(new FileOutputStream(storePath + File.separator + filename));
-//            FileWriter writer = new FileWriter(storePath + File.separator + filename);
-//            BufferedWriter bw = new BufferedWriter(writer);
 //            try {
-//                
+//                bout = new BufferedOutputStream(new FileOutputStream(storePath + File.separator + filename));
+//
 //                HttpResponse response = get(links[i], null, null, Charset.forName("utf-8"));
 //                InputStream in = response.getEntity().getContent();
 //                if (uncompress) {
 //                    in = new GZIPInputStream(in);
 //                }
-//                BufferedReader br=new BufferedReader(new InputStreamReader(in,Charset.forName("utf-8")));    
-//                String line;
-//                StringBuilder sb = new StringBuilder("");
-//                int n = 0 ;
-//                Long a = System.currentTimeMillis();
-//                System.out.println("start appending"+System.currentTimeMillis());
-//                while((line=br.readLine()) != null){
-//                	n++;
-//                	if(n!=1){//为了删除表头
-//                		sb.append(line+"\n");
-//                	}
+//                bin = new BufferedInputStream(in);
+//                byte[] chunk = new byte[4096];
+//                int size = -1;
+//                while ((size = bin.read(chunk)) > -1) {
+//                    bout.write(chunk, 0, size);
+//                    bout.flush();
 //                }
-//                System.out.println("end appending"+(System.currentTimeMillis()-a));
-//                bw.write(sb.toString());
+//                bout.close();
+//                bin.close();
 //            } catch (IOException e) {
 //                logger.error("Failed to store the download file: " + links[i]);
-//            }finally{
-//            	bw.flush();
-//                bw.close();
-//                writer.close();
 //            }
 //            logger.info("Successfully download the file: " + storePath + File.separator + filename);
 //        }
+    	
+        for (int i = 0; i < links.length; i++) {
+            String[] linkParts = splitLink(links[i]);
+            String filename = linkParts[2];
+            if (uncompress) {
+                filename = filename.substring(0, 10);
+            }
+
+            String storePath = baseStorePath + File.separator +
+                    linkParts[0] + File.separator + date;
+            File dir = new File(storePath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            BufferedOutputStream bout = null;
+            BufferedInputStream bin = null;
+            FileWriter writer = new FileWriter(storePath + File.separator + filename);
+            BufferedWriter bw = new BufferedWriter(writer);
+            try {
+                System.out.println(links[i]);
+                HttpResponse response = get(links[i], null, null, Charset.forName("utf-8"));
+                InputStream in = response.getEntity().getContent();
+                if (uncompress) {
+                    in = new GZIPInputStream(in);
+                }
+                BufferedReader br =new BufferedReader(new InputStreamReader(in,Charset.forName("utf-8")));    
+                String line;
+                StringBuilder sb = new StringBuilder("");
+                int n = 0 ;
+                Long a = System.currentTimeMillis();
+                System.out.println("start appending"+System.currentTimeMillis());
+                while((line=br.readLine()) != null){
+                	n++;
+                	if(n!=1){//为了删除表头
+                		sb.append(line+"\n");
+                	}
+                }
+                System.out.println("end appending"+(System.currentTimeMillis()-a));
+                bw.write(sb.toString());
+                br.close();
+            } catch (IOException e) {
+                logger.error("Failed to store the download file: " + links[i]);
+            }finally{
+            	bw.flush();
+                bw.close();
+                writer.close();
+            }
+            logger.info("Successfully download the file: " + storePath + File.separator + filename);
+        }
     }
 
     /**

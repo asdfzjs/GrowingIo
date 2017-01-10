@@ -61,7 +61,7 @@ public abstract class DownloadApi implements StoreApi {
      *             2016071809指代2016年7月18日早上9点数据
      */
     public void download(String date) {
-        download(date, 5);
+        download(date, 60);
     }
 
     public void download(String date, int expire) {
