@@ -3,8 +3,7 @@ package com.zillionfortune.sdk;
 
 /**
  * Hello world!
- *
- *
+ * 数据是从20170105天开始的
  */
 public class AppDemo
 {
