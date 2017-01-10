@@ -79,7 +79,11 @@ public abstract class DownloadApi implements StoreApi {
             for (int i = 0; i < links.length; i++) {
                 logger.info("download links: " + links[i]);
             }
-            store(links,date);
+            try {
+				store(links,date);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
         } else {
             logger.error("failed to download, links is null");
         }
@@ -88,8 +92,9 @@ public abstract class DownloadApi implements StoreApi {
     /**
      * 将获取的下载链接存储在指定的目录下,同时可以选择是否解压
      * @param links 下载链接数组
+     * @throws IOException 
      */
-    public abstract void store(String[] links,String date);
+    public abstract void store(String[] links,String date) throws IOException;
 
 
     private String authToken(String secret, String project, String ai, long tm) throws Exception {
