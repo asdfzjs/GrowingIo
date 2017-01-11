@@ -61,7 +61,7 @@ public abstract class DownloadApi implements StoreApi {
      *             2016071809指代2016年7月18日早上9点数据
      */
     public void download(String date) {
-        download(date, 60);
+        download(date, 5);
     }
 
     public void download(String date, int expire) {
@@ -164,11 +164,15 @@ public abstract class DownloadApi implements StoreApi {
             String jsonString = EntityUtils.toString(response.getEntity());
             Map<String, List<String>> json = objectMapper.readValue(jsonString, Map.class);
             List<String> linkList = json.get("downlinks");
-            String[] links = new String[linkList.size()];
-            for (int i = 0; i < linkList.size(); i++) {
-                links[i] = linkList.get(i);
+            if(linkList!=null){
+            	String[] links = new String[linkList.size()];
+            	for (int i = 0; i < linkList.size(); i++) {
+            		links[i] = linkList.get(i);
+            	}
+            	return links;
+            }else{
+            	 logger.error("this date maybe has no data,date:"+date);
             }
-            return links;
         } catch (IOException e) {
             logger.error("failed to get insights download links: " + e);
         }
