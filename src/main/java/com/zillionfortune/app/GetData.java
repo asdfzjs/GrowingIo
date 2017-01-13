@@ -13,14 +13,14 @@ public class GetData {
 	private static String project = "5RpYxlPN";
 	private static String ai = "988386d1bd106017";
 	private static Long tm = System.currentTimeMillis();
-	private static String base = "https://www.growingio.com/insights/988386d1bd106017/2017010520.json";
-	
+//	private static String base = "https://www.growingio.com/insights/988386d1bd106017/2017010520.json";/projects/:project_id/rules.csv
+	private static String base = "https://www.growingio.com/projects/5RpYxlPN/rules.csv";
 	
 	public static void main(String[] args) throws Exception {
 		HttpGet httpget = new HttpGet(base);
 		httpget.setHeader("X-Client-Id",pub);
 		httpget.setHeader("Content-Type","application/x-www-form-urlencoded");
-		httpget.setHeader("Authorization","EhASqLnKdWNkbcWLW2btERfwIxg3JrFW0HSIWApG83IylgApNWDUe4Kf1eTZVq42");
+		httpget.setHeader("Authorization","tdeaqF3ASJhQnjgGPcbHTd4QbmR9treF0hbwDYXd5IauXSQwubZdHguT5VmMPgc8");
 		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpResponse resp = null;

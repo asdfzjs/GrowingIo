@@ -34,7 +34,7 @@ public class GrowingDownloadApi extends DownloadApi {
      * @throws IOException 
      */
     public void store(String[] links,String date) throws IOException {
-    	
+//    	
 //    	for (int i = 0; i < links.length; i++) {
 //            String[] linkParts = splitLink(links[i]);
 //            String filename = linkParts[2];
@@ -90,7 +90,7 @@ public class GrowingDownloadApi extends DownloadApi {
 
             BufferedOutputStream bout = null;
             BufferedInputStream bin = null;
-            FileWriter writer = new FileWriter(storePath + File.separator + filename);
+            FileWriter writer = new FileWriter(storePath + File.separator + filename+date);
             BufferedWriter bw = new BufferedWriter(writer);
             try {
                 System.out.println(links[i]);
@@ -99,7 +99,7 @@ public class GrowingDownloadApi extends DownloadApi {
                 if (uncompress) {
                     in = new GZIPInputStream(in);
                 }
-                BufferedReader br =new BufferedReader(new InputStreamReader(in,Charset.forName("utf-8")));    
+                BufferedReader br =new BufferedReader(new InputStreamReader(in));    
                 String line;
                 StringBuilder sb = new StringBuilder("");
                 int n = 0 ;
