@@ -33,6 +33,113 @@ public class GrowingDownloadApi extends DownloadApi {
      * @param links 下载链接数组
      * @throws IOException 
      */
+    public void store2(String[] links,String date) throws IOException {
+//    	
+//    	for (int i = 0; i < links.length; i++) {
+//            String[] linkParts = splitLink(links[i]);
+//            String filename = linkParts[2];
+//            if (uncompress) {
+//                filename = filename.substring(0, 10);
+//            }
+//
+//            String storePath = baseStorePath + File.separator +
+//                    linkParts[0] + File.separator + date;
+//            File dir = new File(storePath);
+//            if (!dir.exists()) {
+//                dir.mkdirs();
+//            }
+//
+//            BufferedOutputStream bout = null;
+//            BufferedInputStream bin = null;
+//            try {
+//                bout = new BufferedOutputStream(new FileOutputStream(storePath + File.separator + filename));
+//
+//                HttpResponse response = get(links[i], null, null, Charset.forName("utf-8"));
+//                InputStream in = response.getEntity().getContent();
+//                if (uncompress) {
+//                    in = new GZIPInputStream(in);
+//                }
+//                bin = new BufferedInputStream(in);
+//                byte[] chunk = new byte[4096];
+//                int size = -1;
+//                while ((size = bin.read(chunk)) > -1) {
+//                    bout.write(chunk, 0, size);
+//                    bout.flush();
+//                }
+//                bout.close();
+//                bin.close();
+//            } catch (IOException e) {
+//                logger.error("Failed to store the download file: " + links[i]);
+//            }
+//            logger.info("Successfully download the file: " + storePath + File.separator + filename);
+//        }
+    	
+        for (int i = 0; i < links.length; i++) {
+            String[] linkParts = splitLink(links[i]);
+            String filename = linkParts[2];
+            if (uncompress) {
+                filename = filename.substring(0, 10);
+            }
+
+            String storePath = baseStorePath + File.separator +
+                    linkParts[0] + File.separator + date;
+            File dir = new File(storePath);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File destFile = new File(storePath + File.separator + filename+date);
+            FileWriter writer = new FileWriter(destFile);
+            BufferedWriter bw = new BufferedWriter(writer);
+            try {
+                System.out.println(links[i]);
+                HttpResponse response = get(links[i], null, null, Charset.forName("utf-8"));
+                InputStream in = response.getEntity().getContent();
+                if (uncompress) {
+                    in = new GZIPInputStream(in);
+                }
+                BufferedReader br =new BufferedReader(new InputStreamReader(in));    
+                String line;
+                StringBuilder sb = new StringBuilder("");
+                int n = 0 ;
+                Long a = System.currentTimeMillis();
+                System.out.println("start appending"+System.currentTimeMillis());
+                while((line=br.readLine()) != null){
+                	n++;
+                	if(n!=1){//为了删除表头
+                		sb.append(line+"\n");
+                	}
+                }
+                System.out.println("end appending"+(System.currentTimeMillis()-a));
+                bw.write(sb.toString());
+                br.close();
+//              System.setProperty("hadoop.home.dir", "D:\\tools\\hadoop-2.7.3\\hadoop-2.7.3");
+//            	Configuration conf = new Configuration();
+//            	String uri = "hdfs://192.168.210.66:9000/tmp/growing/"+(i+1);
+//            	 Path dstPath = new Path(uri) ;  
+//            	 
+//            	org.apache.hadoop.fs.FileSystem fs1 = dstPath.getFileSystem(conf);
+//            	fs1.copyFromLocalFile(new Path(destFile.getAbsolutePath()), dstPath);
+            	
+            	
+//                fs1.close();
+                
+                
+            } catch (IOException e) {
+                logger.error("Failed to store the download file: " + links[i]);
+            }finally{
+            	bw.flush();
+                bw.close();
+                writer.close();
+            }
+            logger.info("Successfully download the file: " + storePath + File.separator + filename);
+        }
+    }
+    
+    /**
+     * 将获取的下载链接存储在指定的目录下,同时可以选择是否解压
+     * @param links 下载链接数组
+     * @throws IOException 
+     */
     public void store(String[] links,String date) throws IOException {
 //    	
 //    	for (int i = 0; i < links.length; i++) {
